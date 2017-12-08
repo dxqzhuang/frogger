@@ -1,0 +1,8 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+const int SCREEN_WIDTH = 700;
+const int SCREEN_HEIGHT = 650;
+const float LANE[13]{0,50,100,150,200,250,300,350,400,450,500,550,600};
+
+#endif // CONSTANTS_H
