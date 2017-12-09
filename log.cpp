@@ -1,8 +1,7 @@
 #include "log.h"
 
-Log::Log(){
-
-}
+//defining trivial default constructor
+Log::Log() = default;
 
 //constructor for customized truck
 Log::Log(float posX, int lane){
@@ -42,6 +41,8 @@ Log::Log(float posX, int lane){
             log.setSize(sf::Vector2f(80, 40));
             setSpeed(1.0);
             setDir(-1);
+            break;
+        default:
             break;
     }
 }

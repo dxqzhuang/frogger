@@ -1,11 +1,9 @@
 #include "game.h"
-#include <stdlib.h>
-#include <time.h>
 
 Game::Game(){
     window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Frogger v.01");
     window.setFramerateLimit(60);
-    srand(time(NULL));
+    srand(time(nullptr));
     initTruck();        //create trucks
     initLog();          //create logs
 }
@@ -20,6 +18,27 @@ void Game::Draw(){
     }
     frog.Draw(window);
 }
+
+void Game::processEvents(){
+    sf::Event event{};
+    while(window.pollEvent(event)){
+        switch(event.type){
+            case sf::Event::Closed:
+                window.close();
+                break;
+
+                //key press check
+            case sf::Event::KeyPressed:
+                frog.Move(event);
+                cout<<"frog at lane["<<frog.getLane()<<"]"<<endl;
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
 void Game::update(){
     //updates obstacle location and checks collision
     for(int i=0; i<15; i++){
@@ -40,26 +59,6 @@ void Game::render(){
     window.clear();
     Draw();
     window.display();
-}
-
-void Game::processEvents(){
-    sf::Event event;
-    while(window.pollEvent(event)){
-        switch(event.type){
-        case sf::Event::Closed:
-            window.close();
-            break;
-
-        //key press check
-        case sf::Event::KeyPressed:
-            frog.Move(event);
-            cout<<"frog at lane["<<frog.getLane()<<"]"<<endl;
-            break;
-
-        default:
-            break;
-        }
-    }
 }
 
 bool Game::ifCollide(sf::RectangleShape obstacle){
@@ -146,4 +145,8 @@ void Game::run(){
         update();
         render(); //clear/draw/display
     }
+}
+
+void Game::winCheck(int winCounter[]){
+
 }

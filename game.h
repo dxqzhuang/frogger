@@ -7,6 +7,8 @@
 #include "frog.h"
 #include "truck.h"
 #include "log.h"
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -22,7 +24,8 @@ public:
     void checkCollide();
     void initTruck();
     void initLog();
-    void renderWindow(sf::RenderWindow &window);
+//    void renderWindow(sf::RenderWindow &window);
+    void winCheck(int winCounter[]);
 
 private:
     sf::RenderWindow window;

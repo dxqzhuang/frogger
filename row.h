@@ -9,8 +9,12 @@ using namespace std;
 class Row
 {
 public:
-    obstacle();
-    obstacle(bool log, int x, int y, int speed, bool dir, int gap);
+//    *NOTE* name of constructor has to be same as name of class. i.e Row
+//    obstacle();
+//    obstacle(bool log, int x, int y, int speed, bool dir, int gap);
+
+    Row();
+    Row(bool log, int x, int y, int speed, bool dir, int gap);
 
     int getSpeed();
     bool getDir();
