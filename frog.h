@@ -9,7 +9,6 @@
 class Frog
 {
 public:
-
     //constructor with argument for position
     Frog();
 
@@ -19,37 +18,20 @@ public:
     //function to move frog taking keyboard events as args
     void Move(sf::Event event);
 
+    //function to move frog on logs
+    void Move(float logSpeed, int dir);
+
     //function returning rectangle shape
     sf::RectangleShape GetShape();
 
     int getLane();
+    bool getAlive();
+    void setAlive(bool alive);
 private:
     //the object that will be returned by GetShape() function
     sf::RectangleShape frog;
     int _lane;
-
-
-
-
-//    older design that uses text-based approach
-//public:
-//    Frog();
-//    Frog(float x, float y);
-//    int fSizeX();
-//    int fSizeY();
-//    float fGetX();
-//    float fGetY();
-//    void fSetX(float x);
-//    void fSetY(float y);
-//    void fMoveUp();
-//    void fMoveDown();
-//    void fMoveLeft();
-//    void fMoveRight();
-//    void initFrog();
-//    void renderFrog();
-//private:
-//    float _x;
-//    float _y;
+    bool _alive;
 };
 
 #endif // FROG_H

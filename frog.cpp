@@ -1,7 +1,7 @@
 #include "frog.h"
 
 //default constructor
-Frog::Frog() {
+Frog::Frog(){
     frog.setSize(sf::Vector2f(40.0, 40.0));
     frog.setPosition(sf::Vector2f(SCREEN_WIDTH/2+5,LANE[12]+5));
     _lane=12;
@@ -23,15 +23,22 @@ void Frog::Move(sf::Event event) {
             frog.move(50, 0);
     }
     else if (sf::Keyboard::Key::Up == event.key.code) {
-        if((frog.getPosition().y-5>0))
+        if((frog.getPosition().y-5>0)){
             frog.move(0, -50);
-            _lane++;
+            _lane--;
+        }
     }
     else if (sf::Keyboard::Key::Down == event.key.code) {
-        if((frog.getPosition().y+frog.getSize().y+5<SCREEN_HEIGHT))
+        if((frog.getPosition().y+frog.getSize().y+5<SCREEN_HEIGHT)){
             frog.move(0, 50);
-            _lane--;
+            _lane++;
+        }
     }
+}
+
+//move function while on a log
+void Frog::Move(float logSpeed, int dir){
+    frog.move(logSpeed*dir, 0);
 }
 
 //function returning rectangle shape
@@ -41,4 +48,12 @@ sf::RectangleShape Frog::GetShape() {
 
 int Frog::getLane(){
     return _lane;
+}
+
+bool Frog::getAlive(){
+    return _alive;
+}
+
+void Frog::setAlive(bool alive){
+    _alive=alive;
 }

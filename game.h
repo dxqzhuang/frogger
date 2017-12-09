@@ -19,6 +19,7 @@ public:
     void update();
     void render();
     bool ifCollide(sf::RectangleShape obstacle);
+    void checkCollide();
     void initTruck();
     void initLog();
     void renderWindow(sf::RenderWindow &window);

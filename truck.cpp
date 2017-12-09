@@ -53,7 +53,9 @@ void Truck::Draw(sf::RenderWindow &window) {
 }
 
 
-void Truck::Move() {
+void Truck::Move(){
+    //moving the car based on its speed and direction
+    //wrapping when applicable
     truck.move(_speed*_dir, 0.0);
     if(getDir()==1){
         if(truck.getPosition().x>SCREEN_WIDTH){

@@ -24,22 +24,22 @@ Log::Log(float posX, int lane){
             setDir(-1);
             break;
         case 2:
-            log.setSize(sf::Vector2f(80, 40));
+            log.setSize(sf::Vector2f(100, 40));
             setSpeed(1.0);
             setDir(1);
             break;
         case 3:
-            log.setSize(sf::Vector2f(60, 40));
+            log.setSize(sf::Vector2f(80, 40));
             setSpeed(0.8);
             setDir(-1);
             break;
         case 4:
-            log.setSize(sf::Vector2f(80, 40));
+            log.setSize(sf::Vector2f(100, 40));
             setSpeed(1.5);
             setDir(1);
             break;
         case 5:
-            log.setSize(sf::Vector2f(60, 40));
+            log.setSize(sf::Vector2f(80, 40));
             setSpeed(1.0);
             setDir(-1);
             break;
