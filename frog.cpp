@@ -46,6 +46,11 @@ sf::RectangleShape Frog::GetShape() {
     return frog;
 }
 
+void Frog::Reset(){
+    frog.setPosition(sf::Vector2f(SCREEN_WIDTH/2+5,LANE[12]+5));
+    _lane=12;
+}
+
 int Frog::getLane(){
     return _lane;
 }

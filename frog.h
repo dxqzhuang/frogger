@@ -24,6 +24,9 @@ public:
     //function returning rectangle shape
     sf::RectangleShape GetShape();
 
+    //resets the frog after you get to safezone
+    void Reset();
+
     int getLane();
     bool getAlive();
     void setAlive(bool alive);

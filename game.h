@@ -24,14 +24,19 @@ public:
     void checkCollide();
     void initTruck();
     void initLog();
-//    void renderWindow(sf::RenderWindow &window);
+    void initWalls();
+    void initSafe();
     void winCheck(int winCounter[]);
 
+    //    void renderWindow(sf::RenderWindow &window);
 private:
     sf::RenderWindow window;
     Frog frog;
     vector<Truck> truckV;
     vector<Log> logV;
+    vector<sf::RectangleShape> wallV;
+    vector<sf::RectangleShape> safezoneV;
+    int winCounter[3] = {0,0,0};
 };
 
 

@@ -17,7 +17,7 @@ public:
     //referenced call to main window to draw frog
     void Draw(sf::RenderWindow &window);
 
-    //function moving truck taking window size and float speed as args
+    //function moving
     //dir of -1 reverses the direction
     void Move();
 

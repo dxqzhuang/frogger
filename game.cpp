@@ -6,6 +6,8 @@ Game::Game(){
     srand(time(nullptr));
     initTruck();        //create trucks
     initLog();          //create logs
+    initWalls();        //create walls
+    initSafe();         //create end safezones
 }
 
 void Game::Draw(){
@@ -15,6 +17,12 @@ void Game::Draw(){
     }
     for(int i=0; i<15; i++){
         logV[i].Draw(window);
+    }
+    for(int i=0; i<4; i++){
+        window.draw(wallV[i]);
+    }
+    for(int i=0; i<3; i++){
+        window.draw(safezoneV[i]);
     }
     frog.Draw(window);
 }
@@ -49,16 +57,19 @@ void Game::update(){
     }
 
     checkCollide();
-
+    winCheck(winCounter);
     //debug update
-    if(frog.getAlive()) cout<<"Frog is alive."<<endl;
-    else                cout<<"Frog is dead."<<endl;
+//    if(frog.getAlive()) cout<<"Frog is alive."<<endl;
+//    else                cout<<"Frog is dead."<<endl;
 }
 
 void Game::render(){
-    window.clear();
-    Draw();
-    window.display();
+        window.clear();
+        Draw();
+        window.display();
+    if (!frog.getAlive()){
+        cout<<"YOU DIED!"<<endl;
+    }
 }
 
 bool Game::ifCollide(sf::RectangleShape obstacle){
@@ -72,8 +83,27 @@ bool Game::ifCollide(sf::RectangleShape obstacle){
 
 //function that calls ifCollide based on where the frog is
 void Game::checkCollide(){
+    //for lane 0
+    if(frog.getLane()==0){
+        //hits the wall
+        for(int i=0; i<4; i++){
+            if(ifCollide(wallV[i])){
+                frog.setAlive(false);  //squashed frog
+            }
+        }
+        for(int i=0; i<3; i++){
+            if(ifCollide(safezoneV[i])){
+                safezoneV[i].setFillColor(sf::Color::White);
+                frog.setAlive(true);
+                frog.Reset();
+                winCounter[i] = 1;
+                cout<<"winCounter["<<i<<"] = "<<winCounter[i]<<endl
+                    <<"total counter: {"<<winCounter[0]<<", "<<winCounter[1]<<", "<<winCounter[2]<<"}"<<endl;
+            }
+        }
+    }
     //for lanes 1 to 5
-    if(frog.getLane()>=1&&frog.getLane()<=5){
+    else if(frog.getLane()>=1&&frog.getLane()<=5){
         //set a flag for log collision
         bool flag=false;
         for(int i=0; i<15; i++){
@@ -139,6 +169,26 @@ void Game::initLog(){
     }
 }
 
+void Game::initWalls(){
+    //we want 4 walls
+    for (int i=0; i<4; i++){
+        int wallX = 200*i;
+        wallV.push_back(sf::RectangleShape(sf::Vector2f(100.0, 50.0)));
+        wallV[i].setFillColor(sf::Color::Yellow);
+        wallV[i].setPosition(sf::Vector2f(wallX, LANE[0]));
+    }
+}
+
+void Game::initSafe(){
+    //3 safe zones
+    for (int i=0; i<3; i++){
+        int safeX = ((200*i)+100);
+        safezoneV.push_back(sf::RectangleShape(sf::Vector2f(100.0, 50.0)));
+        safezoneV[i].setFillColor(sf::Color::Black);
+        safezoneV[i].setPosition(sf::Vector2f(safeX, LANE[0]));
+    }
+}
+
 void Game::run(){
     while(window.isOpen()){
         processEvents();
@@ -148,5 +198,9 @@ void Game::run(){
 }
 
 void Game::winCheck(int winCounter[]){
-
+    if (winCounter[0] == 1 &&
+        winCounter[1] == 1 &&
+        winCounter[2] == 1){
+        cout<<"WINNER WINNER CHICKEN DINNER!"<<endl;
+    }
 }

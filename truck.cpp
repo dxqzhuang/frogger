@@ -1,8 +1,6 @@
 #include "truck.h"
 
-Truck::Truck(){
-
-}
+Truck::Truck() = default;
 
 //constructor for customized truck
 Truck::Truck(float posX, int lane){
@@ -42,6 +40,8 @@ Truck::Truck(float posX, int lane){
             truck.setSize(sf::Vector2f(40, 40));
             setSpeed(1.2);
             setDir(-1);
+            break;
+        default:
             break;
     }
 }

@@ -7,7 +7,7 @@ Log::Log() = default;
 Log::Log(float posX, int lane){
     //setting Log sizeY to 40 and positionY
     //at increments of 5 to maintain gap between lanes
-    log.setFillColor(sf::Color::Yellow);
+    log.setFillColor(sf::Color::Blue);
     log.setPosition(sf::Vector2f(posX, LANE[lane]+5));
 
     //sets position for resetting Log
