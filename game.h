@@ -15,20 +15,20 @@ using namespace std;
 class Game{
 public:
     Game();
-    void Draw();
-    void run();
-    void processEvents();
-    void update();
-    void render();
-    bool ifCollide(sf::RectangleShape obstacle);
-    void checkCollide();
-    void initTruck();
-    void initLog();
-    void initWalls();
-    void initSafe();
+    void Draw();                                        //draws the shapes of objects
+    void run();                                         //runs the game
+    void processEvents();                               //process input
+    void update();                                      //update game based on input
+    void render();                                      //refresh and redraw the objects
+    bool ifCollide(sf::RectangleShape obstacle);        //geneirc collision algorithm
+    void gameProgress();                                //calls ifCollide for appropriate obstacles
+    void initTruck();                                   //creates a vector of trucks
+    void initLog();                                     //creates a vector of logs
+    void initWalls();                                   //creates a vector of walls
+    void initSafe();                                    //creates a vector of safe zones
     void winCheck(int winCounter[]);
+    float getRand(int hi, int lo);
 
-    //    void renderWindow(sf::RenderWindow &window);
 private:
     sf::RenderWindow window;
     Frog frog;

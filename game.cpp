@@ -1,4 +1,5 @@
 #include "game.h"
+#include <iostream>
 
 Game::Game(){
     window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Frogger v.01");
@@ -11,11 +12,13 @@ Game::Game(){
 }
 
 void Game::Draw(){
-    //currently hardcoded at 15 cars and 15 logs
-    for(int i=0; i<15; i++){
+    /* precnd: the vector objects exist and are initialized
+     * postcnd: draws the individual objects
+    */
+    for(int i=0; i<NUM_OF_VEHICLE; i++){
         truckV[i].Draw(window);
     }
-    for(int i=0; i<15; i++){
+    for(int i=0; i<NUM_OF_LOG; i++){
         logV[i].Draw(window);
     }
     for(int i=0; i<4; i++){
@@ -28,52 +31,63 @@ void Game::Draw(){
 }
 
 void Game::processEvents(){
+    /* precnd:  frog is initialized
+     * postcnd: updates the frog based on input
+    */
+
     sf::Event event{};
+
     while(window.pollEvent(event)){
         switch(event.type){
             case sf::Event::Closed:
                 window.close();
                 break;
 
-                //key press check
+            //key press check
             case sf::Event::KeyPressed:
-                frog.Move(event);
-                cout<<"frog at lane["<<frog.getLane()<<"]"<<endl;
-                break;
+            //frog only moveable when alive
+                if (frog.getAlive()){
+                    frog.Move(event);
+                    cout<<"frog at lane["<<frog.getLane()<<"]"<<endl;
+                    break;
+                }
 
             default:
                 break;
         }
     }
+    if (!frog.getAlive()){
+        cout<<"YOU DIED!"<<endl;
+        frog.Reset();
+    }
 }
 
 void Game::update(){
-    //updates obstacle location and checks collision
-    for(int i=0; i<15; i++){
+    /* precnd: none
+     * postcnd: updates obstacle location and checks collision
+     */
+    for(int i=0; i<NUM_OF_VEHICLE; i++){
         truckV[i].Move();
     }
-    for(int i=0; i<15; i++){
+    for(int i=0; i<NUM_OF_LOG; i++){
         logV[i].Move();
     }
 
-    checkCollide();
+    gameProgress();
     winCheck(winCounter);
-    //debug update
-//    if(frog.getAlive()) cout<<"Frog is alive."<<endl;
-//    else                cout<<"Frog is dead."<<endl;
+
 }
 
 void Game::render(){
-        window.clear();
-        Draw();
-        window.display();
-    if (!frog.getAlive()){
-        cout<<"YOU DIED!"<<endl;
-    }
+    window.clear();     //clear
+    Draw();             //draw
+    window.display();   //display
 }
 
 bool Game::ifCollide(sf::RectangleShape obstacle){
-    //collision boundary check from frog to any given obstacle
+    /* precnd: an obstacle is passed in
+     * postcnd: return true if the frog has boundary colliding with obstacle
+     */
     bool collide=false;
     if(frog.GetShape().getGlobalBounds().intersects(obstacle.getGlobalBounds())){
         collide=true;
@@ -81,96 +95,108 @@ bool Game::ifCollide(sf::RectangleShape obstacle){
     return collide;
 }
 
-//function that calls ifCollide based on where the frog is
-void Game::checkCollide(){
-    //for lane 0
-    if(frog.getLane()==0){
-        //hits the wall
-        for(int i=0; i<4; i++){
+void Game::gameProgress(){
+    //function that calls ifCollide based on where the frog is
+    /* precnd: everything is initialized
+     * postcnd: updates frog and game state based on collision and lane location
+     */
+    int progress=frog.getLane();
+    bool flag=false;                                            //set a flag for log collision
+
+    switch(progress){
+                                                                    //top lane
+    case 0:
+        for(int i=0; i<4; i++){                                     //frog hitting wall check
             if(ifCollide(wallV[i])){
-                frog.setAlive(false);  //squashed frog
+                frog.setAlive(false);
             }
         }
-        for(int i=0; i<3; i++){
+        for(int i=0; i<3; i++){                                     //frog entering safe zone check
             if(ifCollide(safezoneV[i])){
                 safezoneV[i].setFillColor(sf::Color::White);
                 frog.setAlive(true);
                 frog.Reset();
                 winCounter[i] = 1;
                 cout<<"winCounter["<<i<<"] = "<<winCounter[i]<<endl
-                    <<"total counter: {"<<winCounter[0]<<", "<<winCounter[1]<<", "<<winCounter[2]<<"}"<<endl;
+                    <<"total counter:  {"<<winCounter[0]<<", "
+                    <<winCounter[1]<<", "<<winCounter[2]<<"}"<<endl;
             }
         }
-    }
-    //for lanes 1 to 5
-    else if(frog.getLane()>=1&&frog.getLane()<=5){
-        //set a flag for log collision
-        bool flag=false;
-        for(int i=0; i<15; i++){
-            if(ifCollide(logV[i].GetShape())){
-                //if colliding, set flag true and update frog pos
-                flag=true;
-                frog.Move(logV[i].getSpeed(),logV[i].getDir());
+        break;
+
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        for(int i=0; i<NUM_OF_LOG; i++){                            //when at lanes 1 to 5
+            if(ifCollide(logV[i].GetShape())){                      //check collision with logs
+                flag=true;                                          //if colliding, set flag true
+                frog.Move(logV[i].getSpeed(),logV[i].getDir());     //and update frog pos
             }
         }
         //if no flag has been set, drowned frog
-        if(!flag){
-            frog.setAlive(false);
+        if(!flag){                                                  //if !flag
+            frog.setAlive(false);                                   //frog has not been on a log
         }
-
-        //if the frog is out of bounds, it's dead
-        if(frog.GetShape().getPosition().x<0
-           &&(frog.GetShape().getPosition().x
+        if(frog.GetShape().getPosition().x<0                        //out of bounds check
+           &&(frog.GetShape().getPosition().x                       //when being carried by logs
              +frog.GetShape().getSize().x)>SCREEN_WIDTH)
             frog.setAlive(false);
-    }
-    //for lanes 7 to 11
-    else if(frog.getLane()>=7&&frog.getLane()<=11){
-        for(int i=0; i<15; i++){
-            if(ifCollide(truckV[i].GetShape())){
-                frog.setAlive(false);   //squashed frog
+        break;
+    case 6:
+        break;
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+    case 11:
+        for(int i=0; i<NUM_OF_VEHICLE; i++){                        //when between lanes 7 to 11
+            if(ifCollide(truckV[i].GetShape())){                    //check vehicle collision
+                frog.setAlive(false);
             }
         }
+    default:
+        break;
     }
 }
 
-//this is rectangle shape not truck need to fix
+float Game::getRand(int hi, int lo){
+    /* precnd: upper and lower limit are passed in
+     * postcnd: returns a random float between hi and lo
+     */
+    float r=hi+static_cast <float>(rand())/(static_cast <float>(RAND_MAX/(hi-lo)));
+    return r;
+}
+
 void Game::initTruck(){
-    int numOfTrucks=0;//not current utilized, maybe pass to Game::Draw()?
-    //rng for gap distance
-    float randHI=200, randLO=100;
-    //creates vehicles from lane[7] to lane[11]
-    for(int i=7; i<12; i++){
-        //3 vehicles per lane for now
-        for(int j=0; j<3; j++){
-            //float# generation code from stackoverflow
-            float r=randHI+static_cast <float>(rand())/(static_cast <float>(RAND_MAX/(randHI-randLO)));
-            //creates a new truck in the vector, with position rand for X, lane[i] for Y,
-            truckV.push_back(Truck(j*r, i));
-            numOfTrucks++;
-        }
+    /* precnd: none
+     * postcnd: creates a vector of random distanced trucks
+     */
+    for(int i=7; i<=11; i++){                       //creates vehicles from lane[7] to lane[11]
+        for(int j=0; j<ARRAY_OF_VEHICLE[j]; j++){   //NUM_OF_VEHICLES[j] vehicles per lane
+            float r=getRand(200,100);
+            truckV.push_back(Truck(j*r, i));        //creates a new truck in the vector
+        }                                           //with position rand for X, lane[i] for Y
     }
 }
 
 void Game::initLog(){
-    int numOfLogs=0;
-    //rng for gap distance
-    float randHI=200, randLO=100;
-    //creates vehicles from lane[1] to lane[6]
-    for(int i=1; i<6; i++){
-        //3 vehicles per lane for now
-        for(int j=0; j<3; j++){
-            //float# generation code from stackoverflow
-            float r=randHI+static_cast <float>(rand())/(static_cast <float>(RAND_MAX/(randHI-randLO)));
-            //creates a new truck in the vector, with position rand for X, lane[i] for Y,
-            logV.push_back(Log(j*r, i));
-            numOfLogs++;
-        }
+    /* precnd: none
+     * postcnd: creates a vector of random distanced logs
+     */
+    for(int i=1; i<=5; i++){                        //creates logs from lane[1] to lane[5]
+        for(int j=0; j<ARRAY_OF_LOG[j]; j++){       //NUM_OF_LOGS[j] logs per lane
+            float r=getRand(200,100);
+            logV.push_back(Log(j*r, i));           //creates a new log in the vector
+        }                                           //with position rand for X, lane[i] for Y
     }
 }
 
 void Game::initWalls(){
-    //we want 4 walls
+    /* precnd: none
+     * postcnd: creates 4 walls in the top lane
+     */
     for (int i=0; i<4; i++){
         int wallX = 200*i;
         wallV.push_back(sf::RectangleShape(sf::Vector2f(100.0, 50.0)));
@@ -180,7 +206,9 @@ void Game::initWalls(){
 }
 
 void Game::initSafe(){
-    //3 safe zones
+    /* precnd: none
+     * postcnd: creates 3 safe zones in the top lane
+     */
     for (int i=0; i<3; i++){
         int safeX = ((200*i)+100);
         safezoneV.push_back(sf::RectangleShape(sf::Vector2f(100.0, 50.0)));
@@ -190,14 +218,20 @@ void Game::initSafe(){
 }
 
 void Game::run(){
+    /* precnd: window is open
+     * postcnd: runs the game
+     */
     while(window.isOpen()){
         processEvents();
         update();
-        render(); //clear/draw/display
+        render();
     }
 }
 
 void Game::winCheck(int winCounter[]){
+    /* precnd: winCounter is passed in
+     * postcnd: output winning screen if winCounter is filled
+     */
     if (winCounter[0] == 1 &&
         winCounter[1] == 1 &&
         winCounter[2] == 1){

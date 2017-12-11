@@ -5,6 +5,7 @@ Frog::Frog(){
     frog.setSize(sf::Vector2f(40.0, 40.0));
     frog.setPosition(sf::Vector2f(SCREEN_WIDTH/2+5,LANE[12]+5));
     _lane=12;
+    _alive=true;
 }
 
 //referenced call to main window to draw frog
@@ -49,6 +50,7 @@ sf::RectangleShape Frog::GetShape() {
 void Frog::Reset(){
     frog.setPosition(sf::Vector2f(SCREEN_WIDTH/2+5,LANE[12]+5));
     _lane=12;
+    _alive=true;
 }
 
 int Frog::getLane(){
