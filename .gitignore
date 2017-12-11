@@ -4,4 +4,3 @@ cmake-build-debug/*
 CMakeLists.txt
 assets/.DS_Store
 .DS_Store
-git
