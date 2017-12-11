@@ -37,9 +37,11 @@ void Game::processEvents(){
 
                 //key press check
             case sf::Event::KeyPressed:
-                frog.Move(event);
-                cout<<"frog at lane["<<frog.getLane()<<"]"<<endl;
-                break;
+                if (frog.getAlive()){
+                    frog.Move(event);
+                    cout<<"frog at lane["<<frog.getLane()<<"]"<<endl;
+                    break;
+                }
 
             default:
                 break;
