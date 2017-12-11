@@ -27,6 +27,8 @@ public:
     void initWalls();
     void initSafe();
     void winCheck(int winCounter[]);
+    sf::Sprite makeSprite(const string &fileName);
+    void initSprites();
 
     //    void renderWindow(sf::RenderWindow &window);
 private:
@@ -37,6 +39,7 @@ private:
     vector<sf::RectangleShape> wallV;
     vector<sf::RectangleShape> safezoneV;
     int winCounter[3] = {0,0,0};
+    sf::Sprite cuteFrog;
 };
 
 

@@ -34,7 +34,7 @@ private:
     //the object that will be returned by GetShape() function
     sf::RectangleShape frog;
     int _lane;
-    bool _alive;
+    bool _alive = true;
 };
 
 #endif // FROG_H

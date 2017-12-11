@@ -8,9 +8,12 @@ Game::Game(){
     initLog();          //create logs
     initWalls();        //create walls
     initSafe();         //create end safezones
+    initSprites();
 }
 
 void Game::Draw(){
+
+    window.draw(cuteFrog);
     //currently hardcoded at 15 cars and 15 logs
     for(int i=0; i<15; i++){
         truckV[i].Draw(window);
@@ -203,4 +206,21 @@ void Game::winCheck(int winCounter[]){
         winCounter[2] == 1){
         cout<<"WINNER WINNER CHICKEN DINNER!"<<endl;
     }
+}
+
+sf::Sprite Game::makeSprite(const string &fileName){
+    sf::Texture texture;
+    texture.loadFromFile(fileName);
+
+    if (!texture.loadFromFile(fileName)){
+        cout << "Load Failed!" << endl;
+    }
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    return sprite;
+}
+
+void Game::initSprites(){
+    cuteFrog = makeSprite("assets/cuteFrog.png");
+
 }
