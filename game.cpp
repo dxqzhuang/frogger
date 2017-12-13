@@ -46,11 +46,31 @@ void Game::processEvents(){
             //key press check
             case sf::Event::KeyPressed:
             //frog only moveable when alive
-                if (frog.getAlive()){
-                    frog.Move(event);
-                    cout<<"frog at lane["<<frog.getLane()<<"]"<<endl;
-                    break;
+                if(frog.getAlive()){
+                    if (sf::Keyboard::Key::Left == event.key.code) {
+                        frog.moveLeft();
+                    }
+                    else if (sf::Keyboard::Key::Right == event.key.code) {
+                        frog.moveRight();
+                    }
+                    else if (sf::Keyboard::Key::Up == event.key.code) {
+                        frog.moveUp();
+                    }
+                    else if (sf::Keyboard::Key::Down == event.key.code) {
+                        frog.moveDown();
+                    }
+                    if(DEBUG)   cout<<"Frog at lane["<<frog.getLane()<<"]"<<endl;
                 }
+                //press R to reset
+                if(sf::Keyboard::Key::R==event.key.code){
+                    frog.Reset();
+                    for(int i=0; i<3; i++){
+                        winCounter[i] = 0;
+                        safezoneV[i].setFillColor(sf::Color::Black);
+                    }
+                    cout<<"Game has been reset."<<endl;
+                }
+                break;
 
             default:
                 break;
@@ -112,14 +132,21 @@ void Game::gameProgress(){
             }
         }
         for(int i=0; i<3; i++){                                     //frog entering safe zone check
-            if(ifCollide(safezoneV[i])){
-                safezoneV[i].setFillColor(sf::Color::White);
-                frog.setAlive(true);
-                frog.Reset();
-                winCounter[i] = 1;
-                cout<<"winCounter["<<i<<"] = "<<winCounter[i]<<endl
-                    <<"total counter:  {"<<winCounter[0]<<", "
-                    <<winCounter[1]<<", "<<winCounter[2]<<"}"<<endl;
+            if(ifCollide(safezoneV[i])){                            //if safezone already occupied
+                if(winCounter[i]==1){                               //then set dead and reset
+                    frog.setAlive(false);
+                    cout<<"YOU DIED!"<<endl;
+                    frog.Reset();
+                }
+                else{
+                    safezoneV[i].setFillColor(sf::Color::White);    //if empty safezone
+                    frog.Reset();                                   //reposition frog and update wincounter
+                    winCounter[i] = 1;
+                    if(DEBUG)
+                        cout<<"winCounter["<<i<<"] = "<<winCounter[i]<<endl
+                            <<"total counter:  {"<<winCounter[0]<<", "
+                            <<winCounter[1]<<", "<<winCounter[2]<<"}"<<endl;
+                }
             }
         }
         break;
@@ -173,11 +200,13 @@ void Game::initTruck(){
     /* precnd: none
      * postcnd: creates a vector of random distanced trucks
      */
-    for(int i=7; i<=11; i++){                       //creates vehicles from lane[7] to lane[11]
-        for(int j=0; j<ARRAY_OF_VEHICLE[j]; j++){   //NUM_OF_VEHICLES[j] vehicles per lane
+    int counter=0;
+    for(int lane=7; lane<=11; lane++){                      //creates vehicles from lane[7] to lane[11]
+        for(int j=0; j<VEHICLE_PER_LANE[counter]; j++){     //NUM_OF_VEHICLES[j] vehicles per lane
             float r=getRand(200,100);
-            truckV.push_back(Truck(j*r, i));        //creates a new truck in the vector
-        }                                           //with position rand for X, lane[i] for Y
+            truckV.push_back(Truck(j*r, lane));             //creates a new truck in the vector
+        }                                                   //with position rand for X, lane[i] for Y
+        counter++;
     }
 }
 
@@ -185,11 +214,13 @@ void Game::initLog(){
     /* precnd: none
      * postcnd: creates a vector of random distanced logs
      */
-    for(int i=1; i<=5; i++){                        //creates logs from lane[1] to lane[5]
-        for(int j=0; j<ARRAY_OF_LOG[j]; j++){       //NUM_OF_LOGS[j] logs per lane
+    int counter=0;
+    for(int lane=1; lane<=5; lane++){                       //creates logs from lane[1] to lane[5]
+        for(int j=0; j<LOGS_PER_LANE[counter]; j++){        //NUM_OF_LOGS[counter] logs per lane
             float r=getRand(200,100);
-            logV.push_back(Log(j*r, i));           //creates a new log in the vector
-        }                                           //with position rand for X, lane[i] for Y
+            logV.push_back(Log(j*r, lane));                 //creates a new log in the vector
+        }                                                   //with position rand for X, lane[i] for Y
+        counter++;
     }
 }
 

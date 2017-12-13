@@ -18,7 +18,7 @@ Truck::Truck(float posX, int lane){
     switch(lane){
         case 7:
             truck.setSize(sf::Vector2f(80, 40));
-            setSpeed(1.5);
+            setSpeed(1.2);
             setDir(-1);
             break;
         case 8:

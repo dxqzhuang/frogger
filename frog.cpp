@@ -13,27 +13,25 @@ void Frog::Draw(sf::RenderWindow &window) {
     window.draw(frog);
 }
 
-//function to move frog taking keyboard events as args
-void Frog::Move(sf::Event event) {
-    if (sf::Keyboard::Key::Left == event.key.code) {
-        if(frog.getPosition().x-5>0)
-            frog.move(-50, 0);
-    }
-    else if (sf::Keyboard::Key::Right == event.key.code) {
-        if(frog.getPosition().x+frog.getSize().x+5<SCREEN_WIDTH)
+//functions to move frog
+void Frog::moveLeft(){
+    if(frog.getPosition().x-5>0)
+        frog.move(-50, 0);
+}
+void Frog::moveRight(){
+    if(frog.getPosition().x+frog.getSize().x+5<SCREEN_WIDTH)
             frog.move(50, 0);
     }
-    else if (sf::Keyboard::Key::Up == event.key.code) {
-        if((frog.getPosition().y-5>0)){
-            frog.move(0, -50);
-            _lane--;
-        }
+void Frog::moveUp(){
+    if((frog.getPosition().y-5>0)){
+        frog.move(0, -50);
+        _lane--;
     }
-    else if (sf::Keyboard::Key::Down == event.key.code) {
-        if((frog.getPosition().y+frog.getSize().y+5<SCREEN_HEIGHT)){
-            frog.move(0, 50);
-            _lane++;
-        }
+}
+void Frog::moveDown(){
+    if((frog.getPosition().y+frog.getSize().y+5<SCREEN_HEIGHT)){
+        frog.move(0, 50);
+        _lane++;
     }
 }
 

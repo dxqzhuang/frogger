@@ -15,8 +15,11 @@ public:
     //referenced call to main window to draw frog
     void Draw(sf::RenderWindow &window);
 
-    //function to move frog taking keyboard events as args
-    void Move(sf::Event event);
+    //functions to move frog
+    void moveUp();
+    void moveDown();
+    void moveLeft();
+    void moveRight();
 
     //function to move frog on logs
     void Move(float logSpeed, int dir);
