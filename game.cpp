@@ -167,7 +167,7 @@ void Game::gameProgress(){
             frog.setAlive(false);                                   //frog has not been on a log
         }
         if(frog.GetShape().getPosition().x<0                        //out of bounds check
-           &&(frog.GetShape().getPosition().x                       //when being carried by logs
+           ||(frog.GetShape().getPosition().x                       //when being carried by logs
              +frog.GetShape().getSize().x)>SCREEN_WIDTH)
             frog.setAlive(false);
         break;
